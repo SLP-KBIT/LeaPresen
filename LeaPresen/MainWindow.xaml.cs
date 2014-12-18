@@ -79,7 +79,7 @@ namespace LeaPresen
             DrawLeapTouch(frame);
             DrawLeapLine(leap, frame);
 
-            if (frame.Fingers.Count == 5 && leap.Frame(10).Fingers.Count <= 1)
+            if (frame.Fingers.Extended().Count == 5 && leap.Frame(10).Fingers.Extended().Count <= 1)
             {
                 this.InkCanvas_LeapPaintLine.Strokes.Clear();
             }
@@ -119,12 +119,12 @@ namespace LeaPresen
         {
             InteractionBox interactionBox = frame.InteractionBox;
 
-            if (frame.Pointables.Count != 1)
+            if (frame.Pointables.Extended().Count != 1)
             {
                 return;
             }
 
-            Pointable pointable = frame.Pointables[0];
+            Pointable pointable = frame.Pointables.Extended()[0];
 
             // InteractionBox を利用した座標変換
             Leap.Vector normalizedPosition = interactionBox.NormalizePoint(pointable.StabilizedTipPosition);
@@ -150,7 +150,7 @@ namespace LeaPresen
 
             InteractionBox interactionBox = frame.InteractionBox;
 
-            foreach (Pointable pointable in frame.Pointables)
+            foreach (Pointable pointable in frame.Pointables.Extended())
             {
                 // InteractionBox を利用した座標変換
                 Leap.Vector normalizedPosition = interactionBox.NormalizePoint(pointable.StabilizedTipPosition);
@@ -171,9 +171,10 @@ namespace LeaPresen
 
         protected void DrawLeapLine(Controller leap, Frame frame)
         {
-            FingerList allFingers = frame.Fingers;
+            FingerList allFingers = frame.Fingers.Extended();
 
-            if (allFingers.Count != 2 || leap.Frame(10).Fingers.Count != 2) {
+            if (allFingers.Count != 2 || leap.Frame(10).Fingers.Extended().Count != 2)
+            {
                 return;
             }
 
