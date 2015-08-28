@@ -10,6 +10,7 @@
 ## Requirements
 
 - Leap Motion
+- Windows7
 
 ## References
 
