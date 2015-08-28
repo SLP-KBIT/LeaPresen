@@ -1,21 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{90F8FFB5-6B56-4AA2-B137-C5864483F6C5}</ProjectGuid>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E9250594-9BE6-40EC-B183-EF5A2095F304}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LeaPresen</RootNamespace>
     <AssemblyName>LeaPresen</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,9 +25,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -37,11 +39,26 @@
     <ApplicationIcon>LeaPresen.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GalaSoft.MvvmLight">
+      <HintPath>..\packages\MvvmLightLibs.5.0.2.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras">
+      <HintPath>..\packages\MvvmLightLibs.5.0.2.0\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform">
+      <HintPath>..\packages\MvvmLightLibs.5.0.2.0\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+    </Reference>
     <Reference Include="LeapCSharp.NET4.0">
       <HintPath>..\..\..\..\..\Program Files (x86)\Leap Motion\LeapDeveloperKit\LeapSDK\lib\LeapCSharp.NET4.0.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmLightLibs.5.0.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -59,7 +76,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelLocator.cs" />
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -67,7 +86,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -90,6 +109,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -97,39 +117,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="Microsoft.Office.Core">
-      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
-      <VersionMajor>2</VersionMajor>
-      <VersionMinor>5</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="Microsoft.Office.Interop.PowerPoint">
-      <Guid>{91493440-5A91-11CF-8700-00AA0060263B}</Guid>
-      <VersionMajor>2</VersionMajor>
-      <VersionMinor>10</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="VBIDE">
-      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
-      <VersionMajor>5</VersionMajor>
-      <VersionMinor>3</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="LeaPresen.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
