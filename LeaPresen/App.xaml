@@ -1,16 +1,23 @@
 ﻿<Application x:Class="LeaPresen.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="clr-namespace:LeaPresen.ViewModel"
+             xmlns:vm="clr-namespace:LeaPresen.ViewModels"
+             xmlns:view="clr-namespace:LeaPresen.Views"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              StartupUri="Views/MainWindow.xaml"
              mc:Ignorable="d">
     
     <Application.Resources>
-        <!--Global View Model Locator-->
-        <vm:ViewModelLocator x:Key="Locator"
-                             d:IsDataSource="True" />
+        <ResourceDictionary>
+            <!--Global View Model Locator-->
+            <vm:ViewModelLocator x:Key="Locator"
+                                 d:IsDataSource="True" />
+
+            <DataTemplate DataType="{x:Type vm:SlideShowViewModel}">
+                <view:SlideShow />
+            </DataTemplate>
+        </ResourceDictionary>
     </Application.Resources>
     
 </Application>
