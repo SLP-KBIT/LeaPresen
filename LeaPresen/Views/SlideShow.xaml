@@ -9,8 +9,7 @@
     <Grid>
         <Canvas>
             <Ellipse Fill="Blue"
-                     Height="10"
-                     Width="10"
+                     Width="20" Height="20"
                      Canvas.Top="{Binding Y}"
                      Canvas.Left="{Binding X}">
             </Ellipse>
