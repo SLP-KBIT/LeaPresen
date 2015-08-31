@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using LeaPresen.ViewModel;
+using LeaPresen.ViewModels;
 
-namespace LeaPresen
+namespace LeaPresen.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
