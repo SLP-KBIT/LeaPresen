@@ -4,15 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="680" d:DesignWidth="950"
+             d:DesignHeight="680" d:DesignWidth="940"
              Background="White">
     <Grid>
-        <Canvas Height="680" Width="950">
+        <Canvas>
             <Ellipse Fill="Blue"
                      Height="10"
                      Width="10"
-                     Canvas.Top="10"
-                     Canvas.Left="10">
+                     Canvas.Top="{Binding Y}"
+                     Canvas.Left="{Binding X}">
             </Ellipse>
         </Canvas>
     </Grid>
