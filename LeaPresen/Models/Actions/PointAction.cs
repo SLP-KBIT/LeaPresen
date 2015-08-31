@@ -8,6 +8,9 @@ namespace LeaPresen.Models.Actions
     /// </summary>
     public static class PointAction
     {
+        private const int windowWidth = 940;
+        private const int windowHeight = 680;
+
         private static Action<double, double> drawAction;
 
         /// <summary>
@@ -32,7 +35,7 @@ namespace LeaPresen.Models.Actions
             var pointable = frame.Pointables.Extended().Leftmost;
             var box = frame.InteractionBox;
             var normalizedPosition = box.NormalizePoint(pointable.StabilizedTipPosition);
-            drawAction(normalizedPosition.x * 940, (1 - normalizedPosition.y) * 680);
+            drawAction(normalizedPosition.x * windowWidth, (1 - normalizedPosition.y) * windowHeight);
         }
     }
 }
