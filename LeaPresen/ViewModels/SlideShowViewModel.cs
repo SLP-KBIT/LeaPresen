@@ -26,8 +26,14 @@ namespace LeaPresen.ViewModels
         public void SlideAction(int slideType)
         {
             currentId += slideType;
-            currentId = currentId < 0 ? sources.Count() - 1 : currentId;
-            currentId = currentId >= sources.Count() ? 0 : currentId;
+            if (currentId < 0)
+            {
+                currentId = sources.Count() - 1;
+            }
+            else if (currentId >= sources.Count())
+            {
+                currentId = 0;
+            }
             Source = sources[currentId];
         }
 
