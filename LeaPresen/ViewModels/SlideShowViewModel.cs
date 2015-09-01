@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using LeaPresen.Models;
+using System.IO;
 
 namespace LeaPresen.ViewModels
 {
@@ -15,6 +16,8 @@ namespace LeaPresen.ViewModels
         {
             LeapManager.SetPointAction(PointAction);
             LeapManager.Start();
+            Source = Directory.GetCurrentDirectory() + @"\Images\スライド1.PNG";
+            System.Console.WriteLine(Source);
         }
 
         /// <summary>
@@ -64,5 +67,22 @@ namespace LeaPresen.ViewModels
             }
         }
 
+        private string _Source;
+
+        /// <summary>
+        /// 表示する画像のパス
+        /// </summary>
+        public string Source
+        {
+            get { return _Source; }
+            set
+            {
+                if (_Source != value)
+                {
+                    _Source = value;
+                    RaisePropertyChanged("Source");
+                }
+            }
+        }
     }
 }

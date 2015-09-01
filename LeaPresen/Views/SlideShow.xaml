@@ -7,6 +7,7 @@
              d:DesignHeight="680" d:DesignWidth="940"
              Background="White">
     <Grid>
+        <Image Source="{Binding Source}" />
         <Canvas>
             <Ellipse Fill="Blue"
                      Width="20" Height="20"
