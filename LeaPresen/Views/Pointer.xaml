@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="LeaPresen.Views.SlideShow"
+﻿<UserControl x:Class="LeaPresen.Views.Pointer"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,6 +6,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="680" d:DesignWidth="940">
     <Grid>
-        <Image Source="{Binding Source}" />
+        <Canvas>
+            <Ellipse Fill="Blue"
+                     Width="20" Height="20"
+                     Canvas.Top="{Binding Y}"
+                     Canvas.Left="{Binding X}">
+            </Ellipse>
+        </Canvas>
     </Grid>
 </UserControl>

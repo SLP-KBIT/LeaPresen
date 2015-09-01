@@ -12,6 +12,8 @@
         DataContext="{Binding Main, Source={StaticResource Locator}}">
     
     <Grid>
+        <!-- 下に定義するほど前面に定義される -->
         <ContentControl Content="{Binding SlideShowVM}" />
+        <ContentControl Content="{Binding PointerVM}" />
     </Grid>
 </Window>

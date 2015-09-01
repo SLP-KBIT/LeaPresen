@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using LeaPresen.Models;
 using LeaPresen.ViewModels;
 
 namespace LeaPresen.ViewModels
@@ -14,11 +15,19 @@ namespace LeaPresen.ViewModels
         public MainViewModel()
         {
             SlideShowVM = new SlideShowViewModel();
+            PointerVM = new PointerViewModel();
+            LeapManager.SetPointAction(PointerVM.PointAction);
+            LeapManager.Start();
         }
 
         /// <summary>
         /// SlideShowViewModel
         /// </summary>
         public SlideShowViewModel SlideShowVM { get; set; }
+
+        /// <summary>
+        /// PointerViewModel
+        /// </summary>
+        public PointerViewModel PointerVM { get; set; }
     }
 }

@@ -17,6 +17,10 @@
             <DataTemplate DataType="{x:Type vm:SlideShowViewModel}">
                 <view:SlideShow />
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:PointerViewModel}">
+                <view:Pointer />
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
     
