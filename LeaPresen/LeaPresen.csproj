@@ -77,6 +77,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\Actions\PointAction.cs" />
+    <Compile Include="Models\Actions\SlideAction.cs" />
     <Compile Include="Models\LeapManager.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\PointerViewModel.cs" />

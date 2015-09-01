@@ -17,6 +17,7 @@ namespace LeaPresen.ViewModels
             SlideShowVM = new SlideShowViewModel();
             PointerVM = new PointerViewModel();
             LeapManager.SetPointAction(PointerVM.PointAction);
+            LeapManager.SetSlideAction(SlideShowVM.SlideAction);
             LeapManager.Start();
         }
 
