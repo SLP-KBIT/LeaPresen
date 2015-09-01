@@ -18,6 +18,7 @@ namespace LeaPresen.Models
         static LeapManager()
         {
             controller = new Controller();
+            controller.EnableGesture(Gesture.GestureType.TYPE_SWIPE);
         }
 
         /// <summary>
@@ -37,6 +38,11 @@ namespace LeaPresen.Models
             PointAction.SetAction(pointAction);
         }
 
+        public static void SetSlideAction(Action<int> slideAction)
+        {
+            SlideAction.SetAction(slideAction);
+        }
+
         /// <summary>
         /// トラッキング中にアップデートされる部分
         /// </summary>
@@ -44,7 +50,9 @@ namespace LeaPresen.Models
         /// <param name="e"></param>
         private static void Update(object sender, EventArgs e)
         {
-            PointAction.Draw(controller.Frame());
+            Frame frame = controller.Frame();
+            PointAction.Draw(frame);
+            SlideAction.Turn(frame);
         }
     }
 }

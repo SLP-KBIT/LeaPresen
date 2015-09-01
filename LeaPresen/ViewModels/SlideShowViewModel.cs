@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
-using LeaPresen.Models;
+using System.IO;
+using System.Linq;
 
 namespace LeaPresen.ViewModels
 {
@@ -8,61 +9,50 @@ namespace LeaPresen.ViewModels
     /// </summary>
     public class SlideShowViewModel : ViewModelBase
     {
+        private static readonly string ImagePath = Directory.GetCurrentDirectory() + @"\Images";
+
+        private string[] sources;
+        private int currentId = 0;
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
         public SlideShowViewModel()
         {
-            LeapManager.SetPointAction(PointAction);
-            LeapManager.Start();
+            sources = Directory.GetFiles(ImagePath);
+            Source = sources[currentId];
         }
 
-        /// <summary>
-        /// ポインタ表示のアクション
-        /// </summary>
-        /// <param name="x">X座標</param>
-        /// <param name="y">Y座標</param>
-        private void PointAction(double x, double y)
+        public void SlideAction(int slideType)
         {
-            X = x;
-            Y = y;
+            currentId += slideType;
+            if (currentId < 0)
+            {
+                currentId = sources.Count() - 1;
+            }
+            else if (currentId >= sources.Count())
+            {
+                currentId = 0;
+            }
+            Source = sources[currentId];
         }
 
-        private double _X;
+        private string _Source;
 
         /// <summary>
-        /// X座標の取得または設定
+        /// 表示する画像のパス
         /// </summary>
-        public double X
+        public string Source
         {
-            get { return _X; }
+            get { return _Source; }
             set
             {
-                if (_X != value)
+                if (_Source != value)
                 {
-                    _X = value;
-                    RaisePropertyChanged("X");
+                    _Source = value;
+                    RaisePropertyChanged("Source");
                 }
             }
         }
-
-        private double _Y;
-
-        /// <summary>
-        /// Y座標の取得または設定
-        /// </summary>
-        public double Y
-        {
-            get { return _Y; }
-            set
-            {
-                if (_Y != value)
-                {
-                    _Y = value;
-                    RaisePropertyChanged("Y");
-                }
-            }
-        }
-
     }
 }
