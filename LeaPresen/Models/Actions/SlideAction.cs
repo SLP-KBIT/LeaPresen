@@ -7,6 +7,8 @@ namespace LeaPresen.Models.Actions
     public static class SlideAction
     {
         private const long Interval = 750;
+        private const int Next = 1;
+        private const int Prev = -1;
 
         private static Action<int> turnAction;
 
@@ -49,7 +51,7 @@ namespace LeaPresen.Models.Actions
         private static int GetSwipeType(Gesture gesture)
         {
             SwipeGesture swipe = new SwipeGesture(gesture);
-            return swipe.Direction.x > 0 ? -1 : 1;
+            return swipe.Direction.x > 0 ? Prev : Next;
         }
     }
 }
