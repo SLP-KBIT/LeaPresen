@@ -1,6 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
-using LeaPresen.Models;
 using System.IO;
+using System.Linq;
 
 namespace LeaPresen.ViewModels
 {
@@ -9,13 +9,18 @@ namespace LeaPresen.ViewModels
     /// </summary>
     public class SlideShowViewModel : ViewModelBase
     {
+        private static readonly string ImagePath = Directory.GetCurrentDirectory() + @"\Images";
+
+        private string[] sources;
+        private int currentId = 0;
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
         public SlideShowViewModel()
         {
-            Source = Directory.GetCurrentDirectory() + @"\Images\スライド1.PNG";
-            System.Console.WriteLine(Source);
+            sources = Directory.GetFiles(ImagePath);
+            Source = sources[currentId];
         }
 
         private string _Source;
