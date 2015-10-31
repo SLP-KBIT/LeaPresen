@@ -44,8 +44,8 @@ namespace LeaPresen
         int currentSlideNum = 0;
         BitmapImage currentSlide;
         DispatcherTimer timerGesture = new DispatcherTimer(DispatcherPriority.Normal);
-        bool timerGestureFlag = false;
         static Stopwatch stopWatch = new Stopwatch();
+        bool timerGestureFlag = false;
         bool lineDrawFlag = true;
 
         public MainWindow()
@@ -217,7 +217,14 @@ namespace LeaPresen
 
             // アンダーラインの軌跡を残す
             Pointable pointable = frame.Pointables.Extended()[0];
+
+            // InteractionBox を利用した座標変換
             Leap.Vector normalizedPosition = interactionBox.NormalizePoint(pointable.StabilizedTipPosition);
+
+            double tx = normalizedPosition.x * windowWidth;
+            double ty = windowHeight - normalizedPosition.y * windowHeight;
+            StylusPoint touchPoint = new StylusPoint(tx, ty);
+            tips = new StylusPointCollection(new StylusPoint[] { touchPoint });
            
             if ( normalizedPosition.z <= LineBorder )
             {
@@ -239,7 +246,7 @@ namespace LeaPresen
             }
             this.InkCanvas_LeapPaint.Strokes.Add(stroke);
         }
-
+       
         //====================================================================
         //  パワーポイント系
         //====================================================================
