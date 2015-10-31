@@ -17,6 +17,7 @@ using System.IO;
 using System.Windows.Ink;
 using System.Windows.Threading;
 using Leap;
+using System.Windows.Controls;
 
 namespace LeaPresen
 {
@@ -72,7 +73,7 @@ namespace LeaPresen
 
         protected void LeapUpdate(object sender, EventArgs e)
         {
-            Frame frame = leap.Frame();
+            Leap.Frame frame = leap.Frame();
 
             DetectLeapGesture(leap, frame);
             DrawLeapPoint(frame);
@@ -85,7 +86,7 @@ namespace LeaPresen
             }
         }
 
-        protected void DetectLeapGesture(Controller leap,  Frame frame)
+        protected void DetectLeapGesture(Controller leap, Leap.Frame frame)
         {
             GestureList gestures = frame.Gestures();
 
@@ -115,7 +116,7 @@ namespace LeaPresen
             }
         }
 
-        protected void DrawLeapTouch(Frame frame)
+        protected void DrawLeapTouch(Leap.Frame frame)
         {
             InteractionBox interactionBox = frame.InteractionBox;
 
@@ -142,7 +143,7 @@ namespace LeaPresen
             }
         }
 
-        protected void DrawLeapPoint(Frame frame)
+        protected void DrawLeapPoint(Leap.Frame frame)
         {
             this.InkCanvas_LeapPaint.Strokes.Clear();
             windowHeight = (float)this.MainWindow1.Height;
@@ -169,7 +170,7 @@ namespace LeaPresen
             }
         }
 
-        protected void DrawLeapLine(Controller leap, Frame frame)
+        protected void DrawLeapLine(Controller leap, Leap.Frame frame)
         {
             FingerList allFingers = frame.Fingers.Extended();
 
