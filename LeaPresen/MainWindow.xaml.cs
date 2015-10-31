@@ -18,6 +18,7 @@ using System.Windows.Ink;
 using System.Windows.Threading;
 using Leap;
 using System.Windows.Controls;
+using System.Diagnostics;
 
 namespace LeaPresen
 {
@@ -29,11 +30,14 @@ namespace LeaPresen
         const int DefaultWidth = 960;
         const int DefaultHeight = 720;
         const float TouchBorder = 0.0F;
+        const float LineBorder = 0.25F;
+
         readonly string OutputPath = Directory.GetCurrentDirectory() + @"/tmp";
         Controller leap = new Controller();
         DrawingAttributes pointIndicator = new DrawingAttributes();
         DrawingAttributes touchIndicator = new DrawingAttributes();
         DrawingAttributes lineIndicator = new DrawingAttributes();
+        DrawingAttributes waitIndicator = new DrawingAttributes();
         float windowWidth = DefaultWidth;
         float windowHeight = DefaultHeight;
         int totalSlideNum = 0;
@@ -41,6 +45,8 @@ namespace LeaPresen
         BitmapImage currentSlide;
         DispatcherTimer timerGesture = new DispatcherTimer(DispatcherPriority.Normal);
         bool timerGestureFlag = false;
+        static Stopwatch stopWatch = new Stopwatch();
+        bool lineDrawFlag = true;
 
         public MainWindow()
         {
@@ -53,9 +59,14 @@ namespace LeaPresen
             touchIndicator.Width = touchIndicator.Height = 10;
             pointIndicator.Width = pointIndicator.Height = 20;
             lineIndicator.Width = lineIndicator.Height = 10;
+
+            waitIndicator.Width = waitIndicator.Height = 10;
+
             touchIndicator.Color = Color.FromArgb(0xff, 0xff, 0x0, 0x0);
             pointIndicator.Color = Color.FromArgb(0xff, 0x0, 0xff, 0x0);
-            lineIndicator.Color = Color.FromArgb(0xf0, 0x00, 0x70, 0xff);
+            lineIndicator.Color = Color.FromArgb(0xf0, 0x0, 0x70, 0xff);
+
+            waitIndicator.Color = Color.FromArgb(0x80, 0x0, 0xff, 0x0);
         }
 
         ~MainWindow()
@@ -138,6 +149,11 @@ namespace LeaPresen
             // タッチ状態
             if (normalizedPosition.z <= TouchBorder)
             {
+                // アンダーラインの軌跡の描画後、描画を受け付けない
+                if (stopWatch.ElapsedMilliseconds < 2000)
+                {
+                    return;
+                }
                 Stroke touchStroke = new Stroke(tips, touchIndicator);
                 this.InkCanvas_LeapPaintLine.Strokes.Add(touchStroke.Clone());
             }
@@ -173,6 +189,7 @@ namespace LeaPresen
         protected void DrawLeapLine(Controller leap, Leap.Frame frame)
         {
             FingerList allFingers = frame.Fingers.Extended();
+            
 
             if (allFingers.Count != 2 || leap.Frame(10).Fingers.Extended().Count != 2)
             {
@@ -194,7 +211,32 @@ namespace LeaPresen
             StylusPointCollection tips = new StylusPointCollection();
             tips.Add(new StylusPoint(tx1, ty1));
             tips.Add(new StylusPoint(tx2, ty2));
+
             Stroke stroke = new Stroke(tips, lineIndicator);
+            Stroke touchStroke = new Stroke(tips, touchIndicator);
+
+            // アンダーラインの軌跡を残す
+            Pointable pointable = frame.Pointables.Extended()[0];
+            Leap.Vector normalizedPosition = interactionBox.NormalizePoint(pointable.StabilizedTipPosition);
+           
+            if ( normalizedPosition.z <= LineBorder )
+            {
+                stopWatch.Start();
+                stroke.DrawingAttributes = waitIndicator;
+
+                if (stopWatch.ElapsedMilliseconds > 1000 && lineDrawFlag == true)
+                {
+                    lineDrawFlag = false;
+                    this.InkCanvas_LeapPaintLine.Strokes.Add(touchStroke);
+                }
+
+                if (stopWatch.ElapsedMilliseconds > 3000)
+                {
+                    stroke.DrawingAttributes = lineIndicator;
+                    lineDrawFlag = true;
+                    stopWatch.Reset();
+                }
+            }
             this.InkCanvas_LeapPaint.Strokes.Add(stroke);
         }
 
