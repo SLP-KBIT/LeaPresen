@@ -19,6 +19,7 @@ using System.Windows.Threading;
 using Leap;
 using System.Windows.Controls;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace LeaPresen
 {
@@ -62,11 +63,10 @@ namespace LeaPresen
 
             waitIndicator.Width = waitIndicator.Height = 10;
 
-            touchIndicator.Color = Color.FromArgb(0xff, 0xff, 0x0, 0x0);
-            pointIndicator.Color = Color.FromArgb(0xff, 0x0, 0xff, 0x0);
-            lineIndicator.Color = Color.FromArgb(0xf0, 0x0, 0x70, 0xff);
-
-            waitIndicator.Color = Color.FromArgb(0x80, 0x0, 0xff, 0x0);
+            touchIndicator.Color = System.Windows.Media.Color.FromArgb(0xff, 0xff, 0x0, 0x0);
+            pointIndicator.Color = System.Windows.Media.Color.FromArgb(0xff, 0x0, 0xff, 0x0);
+            lineIndicator.Color = System.Windows.Media.Color.FromArgb(0xf0, 0x0, 0x70, 0xff);
+            waitIndicator.Color = System.Windows.Media.Color.FromArgb(0x80, 0x0, 0xff, 0x0);
         }
 
         ~MainWindow()
@@ -90,6 +90,9 @@ namespace LeaPresen
             DrawLeapPoint(frame);
             DrawLeapTouch(frame);
             DrawLeapLine(leap, frame);
+
+            DrawLeapArrow(leap, frame);
+
 
             if (frame.Fingers.Extended().Count == 5 && leap.Frame(10).Fingers.Extended().Count <= 1)
             {
@@ -149,7 +152,7 @@ namespace LeaPresen
             // タッチ状態
             if (normalizedPosition.z <= TouchBorder)
             {
-                // アンダーラインの軌跡の描画後、描画を受け付けない
+                // 残るアンダーラインの描画後、描画を受け付けない
                 if (stopWatch.ElapsedMilliseconds < 2000)
                 {
                     return;
@@ -189,7 +192,7 @@ namespace LeaPresen
         protected void DrawLeapLine(Controller leap, Leap.Frame frame)
         {
             FingerList allFingers = frame.Fingers.Extended();
-            
+
 
             if (allFingers.Count != 2 || leap.Frame(10).Fingers.Extended().Count != 2)
             {
@@ -225,8 +228,8 @@ namespace LeaPresen
             double ty = windowHeight - normalizedPosition.y * windowHeight;
             StylusPoint touchPoint = new StylusPoint(tx, ty);
             tips = new StylusPointCollection(new StylusPoint[] { touchPoint });
-           
-            if ( normalizedPosition.z <= LineBorder )
+
+            if (normalizedPosition.z <= LineBorder)
             {
                 stopWatch.Start();
                 stroke.DrawingAttributes = waitIndicator;
@@ -246,7 +249,43 @@ namespace LeaPresen
             }
             this.InkCanvas_LeapPaint.Strokes.Add(stroke);
         }
-       
+
+        protected void DrawLeapArrow(Controller leap, Leap.Frame frame)
+        {
+            FingerList allFingers = frame.Fingers.Extended();
+
+            if (allFingers.Count != 3 || leap.Frame(10).Fingers.Extended().Count != 3)
+            {
+                this.Image_Cursor.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            this.InkCanvas_LeapPaint.Strokes.Clear();
+            windowHeight = (float)this.MainWindow1.Height;
+            windowWidth = (float)this.MainWindow1.Width;
+
+            InteractionBox interactionBox = frame.InteractionBox;
+
+            Finger finger = allFingers.Rightmost;
+            // InteractionBox を利用した座標変換
+            Leap.Vector normalizedPosition = interactionBox.NormalizePoint(finger.StabilizedTipPosition);
+
+            double tx = normalizedPosition.x * windowWidth;
+            double ty = windowHeight - normalizedPosition.y * windowHeight;
+            StylusPoint touchPoint = new StylusPoint(tx, ty);
+            StylusPointCollection tips = new StylusPointCollection(new StylusPoint[] { touchPoint });
+
+            // ホバー状態
+            if (normalizedPosition.z > TouchBorder)
+            {
+                this.Canvas_Cursor.Visibility = Visibility.Visible;
+                this.Image_Cursor.Visibility = Visibility.Visible;
+                this.DataContext = new { X = tx, Y = ty };
+
+            }
+
+        }
+
         //====================================================================
         //  パワーポイント系
         //====================================================================
@@ -337,7 +376,7 @@ namespace LeaPresen
 
                 for (int i = 1; i <= totalSlideNum; i++)
                 {
-                    string output = OutputPath + String.Format("/slide{0:0000}.jpg", i-1);
+                    string output = OutputPath + String.Format("/slide{0:0000}.jpg", i - 1);
                     ppt.Slides[i].Export(output, "jpg", width, height);
                 }
             }

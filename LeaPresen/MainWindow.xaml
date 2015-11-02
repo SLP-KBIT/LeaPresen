@@ -18,5 +18,10 @@
                 <SolidColorBrush Color="White" Opacity="0"/>
             </InkCanvas.Background>
         </InkCanvas>
+        <Canvas x:Name="Canvas_Cursor" Visibility="Collapsed">
+            <Image x:Name="Image_Cursor" Visibility="Collapsed" 
+               Height="60" Width="60" Canvas.Top="{Binding Y}" Canvas.Left="{Binding X}"
+               Source="Resources\Cursor.png" />
+        </Canvas>
     </Grid>
 </Window>
