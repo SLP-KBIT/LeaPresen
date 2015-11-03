@@ -49,6 +49,8 @@ namespace LeaPresen
         bool timerGestureFlag = false;
         bool lineDrawFlag = true;
 
+        static Stopwatch showStopWatch = new Stopwatch();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -67,6 +69,7 @@ namespace LeaPresen
             pointIndicator.Color = System.Windows.Media.Color.FromArgb(0xff, 0x0, 0xff, 0x0);
             lineIndicator.Color = System.Windows.Media.Color.FromArgb(0xf0, 0x0, 0x70, 0xff);
             waitIndicator.Color = System.Windows.Media.Color.FromArgb(0x80, 0x0, 0xff, 0x0);
+
         }
 
         ~MainWindow()
@@ -90,14 +93,14 @@ namespace LeaPresen
             DrawLeapPoint(frame);
             DrawLeapTouch(frame);
             DrawLeapLine(leap, frame);
-
             DrawLeapArrow(leap, frame);
-
 
             if (frame.Fingers.Extended().Count == 5 && leap.Frame(10).Fingers.Extended().Count <= 1)
             {
                 this.InkCanvas_LeapPaintLine.Strokes.Clear();
             }
+            // ストップウォッチの更新
+            TimeCount.Text = showStopWatch.Elapsed.ToString(@"mm\:ss");
         }
 
         protected void DetectLeapGesture(Controller leap, Leap.Frame frame)
@@ -167,6 +170,11 @@ namespace LeaPresen
             this.InkCanvas_LeapPaint.Strokes.Clear();
             windowHeight = (float)this.MainWindow1.Height;
             windowWidth = (float)this.MainWindow1.Width;
+
+            this.DataContext = new { 
+                swRIGHT = windowWidth - (windowWidth-DefaultWidth)/2 - this.TimeCount.FontSize*5, 
+                swBOTTOM = windowHeight-150 
+            };
 
             InteractionBox interactionBox = frame.InteractionBox;
 
@@ -281,9 +289,17 @@ namespace LeaPresen
                 this.Canvas_Cursor.Visibility = Visibility.Visible;
                 this.Image_Cursor.Visibility = Visibility.Visible;
                 this.DataContext = new { X = tx, Y = ty };
-
             }
 
+        }
+
+        private void StartTimer(object sender, DragEventArgs e)
+        {
+            string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (files != null)
+            {
+                this.TextBox_SubmitFile.Text = files[0];
+            }
         }
 
         //====================================================================
@@ -329,6 +345,7 @@ namespace LeaPresen
             currentSlideNum += num;
             if (currentSlideNum >= totalSlideNum)
             {
+                showStopWatch.Stop();
                 currentSlideNum = 0;
             }
             else if (currentSlideNum < 0)
@@ -358,6 +375,11 @@ namespace LeaPresen
             this.InkCanvas_LeapPaintLine.Visibility = Visibility.Visible;
             TurnSlide(0);
             //MainWindow1.WindowState = System.Windows.WindowState.Maximized;
+
+            // ストップウォッチのスタート(TickTimerの定期実行)
+            this.Canvas_StopWatch.Visibility = Visibility.Visible;
+            showStopWatch.Start();
+            
         }
 
         private void OutputImageFiles(string fileName)
@@ -394,7 +416,6 @@ namespace LeaPresen
                 }
             }
         }
-
 
         //  緊急用 : カーソルキーでのスライドめくり
         private void MainWindow1_PreviewKeyDown(object sender, KeyEventArgs e)

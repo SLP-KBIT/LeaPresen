@@ -21,7 +21,11 @@
         <Canvas x:Name="Canvas_Cursor" Visibility="Collapsed">
             <Image x:Name="Image_Cursor" Visibility="Collapsed" 
                Height="60" Width="60" Canvas.Top="{Binding Y}" Canvas.Left="{Binding X}"
-               Source="Resources\Cursor.png" />
+               Source="Resources\hand.png" />
+        </Canvas>
+        <Canvas x:Name="Canvas_StopWatch" Visibility="Collapsed">
+            <TextBlock x:Name="TimeCount" FontSize="32" Foreground="Red" Text="00:00" 
+                       Canvas.Top="{Binding swBOTTOM}" Canvas.Left="{Binding swRIGHT}" />
         </Canvas>
     </Grid>
 </Window>
