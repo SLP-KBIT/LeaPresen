@@ -171,11 +171,6 @@ namespace LeaPresen
             windowHeight = (float)this.MainWindow1.Height;
             windowWidth = (float)this.MainWindow1.Width;
 
-            this.DataContext = new { 
-                swRIGHT = windowWidth - (windowWidth-DefaultWidth)/2 - this.TimeCount.FontSize*5, 
-                swBOTTOM = windowHeight-150 
-            };
-
             InteractionBox interactionBox = frame.InteractionBox;
 
             foreach (Pointable pointable in frame.Pointables.Extended())

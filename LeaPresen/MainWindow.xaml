@@ -24,8 +24,7 @@
                Source="Resources\hand.png" />
         </Canvas>
         <Canvas x:Name="Canvas_StopWatch" Visibility="Collapsed">
-            <TextBlock x:Name="TimeCount" FontSize="32" Foreground="Red" Text="00:00" 
-                       Canvas.Top="{Binding swBOTTOM}" Canvas.Left="{Binding swRIGHT}" />
+            <TextBlock x:Name="TimeCount" FontSize="32" Foreground="Red" Text="00:00"/>
         </Canvas>
     </Grid>
 </Window>
