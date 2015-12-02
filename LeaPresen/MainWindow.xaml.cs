@@ -45,11 +45,13 @@ namespace LeaPresen
         int currentSlideNum = 0;
         BitmapImage currentSlide;
         DispatcherTimer timerGesture = new DispatcherTimer(DispatcherPriority.Normal);
-        static Stopwatch stopWatch = new Stopwatch();
         bool timerGestureFlag = false;
-        bool lineDrawFlag = true;
-
+       
         static Stopwatch showStopWatch = new Stopwatch();
+        static Stopwatch sleepLine = new Stopwatch();
+        bool lineDrawFlag = true;
+        static Stopwatch sleepTurn = new Stopwatch();
+        bool turnFlag = true;
         protected int rejectTime = 1000; 
 
         public MainWindow()
@@ -108,30 +110,37 @@ namespace LeaPresen
         {
             GestureList gestures = frame.Gestures();
 
+            if ( sleepTurn.ElapsedMilliseconds > 1500 )
+            {
+                turnFlag = true;
+                sleepTurn.Reset();
+            }
+
+            if (!turnFlag)
+            {
+                return;
+            }
+            
+
             foreach (Gesture gesture in gestures)
             {
-                if (gesture.State != Gesture.GestureState.STATESTOP)
-                {
-                    continue;
-                }
-
                 switch (gesture.Type)
                 {
-                    case Gesture.GestureType.TYPESWIPE:
-                        SwipeGesture swipe = new SwipeGesture(gesture);
-
-                        if (swipe.StartPosition.x < 0 && swipe.Direction.x > 0)
-                        {
-                            TurnSlide(-1);
-                        }
-                        else if (swipe.StartPosition.x > 0 && swipe.Direction.x < 0)
-                        {
-                            TurnSlide(+1);
-                        }
+                    case Gesture.GestureType.TYPE_SWIPE:
+                        turnFlag = false;
+                        sleepTurn.Start();
+                        TurnSlide(GetSwipeType(gesture));
+                        return;
+                    default:
                         break;
-                    default: break;
                 }
             }
+        }
+
+        private static int GetSwipeType(Gesture gesture)
+        {
+            SwipeGesture swipe = new SwipeGesture(gesture);
+            return swipe.Direction.x > 0 ? -1 : +1;
         }
 
         protected void DrawLeapTouch(Leap.Frame frame)
@@ -157,7 +166,7 @@ namespace LeaPresen
             if (normalizedPosition.z <= TouchBorder)
             {
                 // 残るアンダーラインの描画後、描画を受け付けない
-                if (stopWatch.ElapsedMilliseconds < rejectTime)
+                if (sleepLine.ElapsedMilliseconds < rejectTime)
                 {
                     return;
                 }
@@ -232,25 +241,25 @@ namespace LeaPresen
 
             if (normalizedPosition1.z <= LineBorder || normalizedPosition1.z <= LineBorder)
             {
-                stopWatch.Start();
+                sleepLine.Start();
                 stroke.DrawingAttributes = waitIndicator;
 
-                if (stopWatch.ElapsedMilliseconds > 500 && lineDrawFlag == true)
+                if (sleepLine.ElapsedMilliseconds > 500 && lineDrawFlag == true)
                 {
                     lineDrawFlag = false;
                     this.InkCanvas_LeapPaintLine.Strokes.Add(touchStroke);
                 }
 
-                if (stopWatch.ElapsedMilliseconds > rejectTime)
+                if (sleepLine.ElapsedMilliseconds > rejectTime)
                 {
                     stroke.DrawingAttributes = lineIndicator;
                     lineDrawFlag = true;
-                    stopWatch.Reset();
+                    sleepLine.Reset();
                 }
             }
             else
             {
-                stopWatch.Reset();
+                sleepLine.Reset();
             }
             this.InkCanvas_LeapPaint.Strokes.Add(stroke);
         }
