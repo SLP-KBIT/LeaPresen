@@ -96,7 +96,7 @@ namespace LeaPresen
             DrawLeapPoint(frame);
             DrawLeapTouch(frame);
             DrawLeapLine(leap, frame);
-            DrawLeapArrow(leap, frame);
+            DrawLeapPicture(leap, frame);
 
             if (frame.Fingers.Extended().Count == 5 && leap.Frame(10).Fingers.Extended().Count <= 1)
             {
@@ -165,11 +165,6 @@ namespace LeaPresen
             // タッチ状態
             if (normalizedPosition.z <= TouchBorder)
             {
-                // 残るアンダーラインの描画後、描画を受け付けない
-                if (sleepLine.ElapsedMilliseconds < rejectTime)
-                {
-                    return;
-                }
                 Stroke touchStroke = new Stroke(tips, touchIndicator);
                 this.InkCanvas_LeapPaintLine.Strokes.Add(touchStroke.Clone());
             }
@@ -209,7 +204,6 @@ namespace LeaPresen
         {
             FingerList allFingers = frame.Fingers.Extended();
 
-
             if (allFingers.Count != 2 || leap.Frame(10).Fingers.Extended().Count != 2)
             {
                 return;
@@ -238,13 +232,13 @@ namespace LeaPresen
             Pointable pointable = frame.Pointables.Extended()[0];
 
             // InteractionBox を利用した座標変換
-
-            if (normalizedPosition1.z <= LineBorder || normalizedPosition1.z <= LineBorder)
+            
+            if (normalizedPosition1.z <= LineBorder && normalizedPosition2.z <= LineBorder)
             {
                 sleepLine.Start();
                 stroke.DrawingAttributes = waitIndicator;
 
-                if (sleepLine.ElapsedMilliseconds > 500 && lineDrawFlag == true)
+                if (sleepLine.ElapsedMilliseconds > 1000 && lineDrawFlag == true)
                 {
                     lineDrawFlag = false;
                     this.InkCanvas_LeapPaintLine.Strokes.Add(touchStroke);
@@ -264,7 +258,7 @@ namespace LeaPresen
             this.InkCanvas_LeapPaint.Strokes.Add(stroke);
         }
 
-        protected void DrawLeapArrow(Controller leap, Leap.Frame frame)
+        protected void DrawLeapPicture(Controller leap, Leap.Frame frame)
         {
             FingerList allFingers = frame.Fingers.Extended();
 
