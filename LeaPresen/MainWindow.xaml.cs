@@ -50,6 +50,7 @@ namespace LeaPresen
         bool lineDrawFlag = true;
 
         static Stopwatch showStopWatch = new Stopwatch();
+        protected int rejectTime = 1000; 
 
         public MainWindow()
         {
@@ -156,7 +157,7 @@ namespace LeaPresen
             if (normalizedPosition.z <= TouchBorder)
             {
                 // 残るアンダーラインの描画後、描画を受け付けない
-                if (stopWatch.ElapsedMilliseconds < 2000)
+                if (stopWatch.ElapsedMilliseconds < rejectTime)
                 {
                     return;
                 }
@@ -173,8 +174,10 @@ namespace LeaPresen
 
             InteractionBox interactionBox = frame.InteractionBox;
 
+            int i = 0;
             foreach (Pointable pointable in frame.Pointables.Extended())
             {
+                if (i == 2) { break; } // 描画を2つまでに
                 // InteractionBox を利用した座標変換
                 Leap.Vector normalizedPosition = interactionBox.NormalizePoint(pointable.StabilizedTipPosition);
 
@@ -189,6 +192,7 @@ namespace LeaPresen
                     Stroke touchStroke = new Stroke(tips, pointIndicator);
                     this.InkCanvas_LeapPaint.Strokes.Add(touchStroke);
                 }
+                i++;
             }
         }
 
@@ -225,30 +229,28 @@ namespace LeaPresen
             Pointable pointable = frame.Pointables.Extended()[0];
 
             // InteractionBox を利用した座標変換
-            Leap.Vector normalizedPosition = interactionBox.NormalizePoint(pointable.StabilizedTipPosition);
 
-            double tx = normalizedPosition.x * windowWidth;
-            double ty = windowHeight - normalizedPosition.y * windowHeight;
-            StylusPoint touchPoint = new StylusPoint(tx, ty);
-            tips = new StylusPointCollection(new StylusPoint[] { touchPoint });
-
-            if (normalizedPosition.z <= LineBorder)
+            if (normalizedPosition1.z <= LineBorder || normalizedPosition1.z <= LineBorder)
             {
                 stopWatch.Start();
                 stroke.DrawingAttributes = waitIndicator;
 
-                if (stopWatch.ElapsedMilliseconds > 1000 && lineDrawFlag == true)
+                if (stopWatch.ElapsedMilliseconds > 500 && lineDrawFlag == true)
                 {
                     lineDrawFlag = false;
                     this.InkCanvas_LeapPaintLine.Strokes.Add(touchStroke);
                 }
 
-                if (stopWatch.ElapsedMilliseconds > 3000)
+                if (stopWatch.ElapsedMilliseconds > rejectTime)
                 {
                     stroke.DrawingAttributes = lineIndicator;
                     lineDrawFlag = true;
                     stopWatch.Reset();
                 }
+            }
+            else
+            {
+                stopWatch.Reset();
             }
             this.InkCanvas_LeapPaint.Strokes.Add(stroke);
         }
