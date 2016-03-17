@@ -181,7 +181,7 @@ namespace LeaPresen
             int i = 0;
             foreach (Pointable pointable in frame.Pointables.Extended())
             {
-                if (i == 2) { break; } // 描画を2つまでに
+                if (i == 2) { break; } // ポインタの描画を2つまでに
                 // InteractionBox を利用した座標変換
                 Leap.Vector normalizedPosition = interactionBox.NormalizePoint(pointable.StabilizedTipPosition);
 
@@ -264,7 +264,7 @@ namespace LeaPresen
         {
             FingerList allFingers = frame.Fingers.Extended();
 
-            if (allFingers.Count != 4 || leap.Frame(10).Fingers.Extended().Count != 4)
+            if (allFingers.Count < 3 || leap.Frame(10).Fingers.Extended().Count < 3)
             {
                 this.Image_Cursor.Visibility = Visibility.Collapsed;
                 return;
