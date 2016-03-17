@@ -190,6 +190,8 @@ namespace LeaPresen
                 StylusPoint touchPoint = new StylusPoint(tx, ty);
                 StylusPointCollection tips = new StylusPointCollection(new StylusPoint[] { touchPoint });
 
+
+
                 // ホバー状態
                 if (normalizedPosition.z > TouchBorder)
                 {
@@ -262,7 +264,7 @@ namespace LeaPresen
         {
             FingerList allFingers = frame.Fingers.Extended();
 
-            if (allFingers.Count != 3 || leap.Frame(10).Fingers.Extended().Count != 3)
+            if (allFingers.Count != 4 || leap.Frame(10).Fingers.Extended().Count != 4)
             {
                 this.Image_Cursor.Visibility = Visibility.Collapsed;
                 return;
